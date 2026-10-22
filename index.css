@@ -633,3 +633,54 @@ main { overflow:hidden; color:var(--paper); background:#17130f; min-height:100dv
   .enquiry-form { grid-template-columns:1fr; }
   .enquiry-form label:nth-of-type(4),.enquiry-form>button,.enquiry-form>small,.enquiry-form>.form-status { grid-column:1; }
 }
+
+
+/* Design library */
+.design-library { padding: 8.5rem 5.2vw 7rem; border-top: 1px solid var(--line, rgba(236,220,196,.18)); }
+.design-library-header { margin-bottom: 2.4rem; }
+.design-library-tools { display:flex; justify-content:space-between; gap:1rem; padding:1rem 0; margin-bottom:1.4rem; border-top:1px solid rgba(236,220,196,.22); border-bottom:1px solid rgba(236,220,196,.22); color:#b6a99a; font-size:.7rem; letter-spacing:.08em; }
+.design-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:1rem; }
+.design-card { text-align:left; min-width:0; border:1px solid rgba(236,220,196,.14); background:#211a15; color:#f2e8d8; padding:.55rem; cursor:pointer; transition:transform .22s ease,border-color .22s ease,background .22s ease; }
+.design-card:hover { transform:translateY(-4px); border-color:#e97842; background:#2b2019; }
+.design-thumb { display:flex; align-items:center; justify-content:center; aspect-ratio:4/5; overflow:hidden; background:#f0ece6; }
+.design-thumb img { display:block; width:100%; height:100%; object-fit:contain; }
+.design-card-meta { display:flex; align-items:center; gap:.45rem; padding:.65rem .2rem .2rem; color:#a99b8b; font-size:.62rem; letter-spacing:.06em; }
+.design-card-meta strong { color:#f3e8d8; font-size:.8rem; font-weight:500; }
+.design-open { margin-left:auto; color:#ed8147; font-size:1rem; }
+.design-pagination { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-top:2.2rem; }
+.design-page-numbers { display:flex; justify-content:center; flex-wrap:wrap; gap:.45rem; }
+.design-page-number,.design-page-arrow { border:1px solid rgba(236,220,196,.25); background:transparent; color:#e8ddcf; padding:.7rem .85rem; cursor:pointer; transition:background .2s ease,color .2s ease,border-color .2s ease; }
+.design-page-number { min-width:2.55rem; }
+.design-page-number.active,.design-page-number:hover,.design-page-arrow:not(:disabled):hover { background:#e97842; border-color:#e97842; color:#1c1511; }
+.design-page-arrow:disabled { opacity:.35; cursor:not-allowed; }
+.design-library-foot { color:#a99b8b; text-align:center; margin-top:1.5rem; font-size:.7rem; letter-spacing:.04em; }
+.design-lightbox { position:fixed; z-index:1000; inset:0; display:flex; align-items:center; justify-content:center; padding:2rem; background:rgba(10,8,7,.88); backdrop-filter:blur(10px); }
+.design-lightbox-panel { position:relative; display:grid; grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr); width:min(100%,1000px); max-height:90vh; overflow:auto; background:#211a15; border:1px solid rgba(236,220,196,.2); color:#f2e8d8; }
+.design-lightbox-close { position:absolute; z-index:2; top:.75rem; right:.75rem; display:grid; place-items:center; width:2.7rem; height:2.7rem; border:1px solid rgba(236,220,196,.3); background:#211a15; color:#f2e8d8; cursor:pointer; }
+.design-lightbox-art { display:flex; align-items:center; justify-content:center; min-height:400px; padding:1.5rem; background:#f0ece6; }
+.design-lightbox-art img { max-width:100%; max-height:72vh; object-fit:contain; }
+.design-lightbox-info { display:flex; flex-direction:column; justify-content:space-between; gap:2rem; padding:clamp(1.5rem,4vw,3.5rem); }
+.design-lightbox-info h3 { margin:.5rem 0 1rem; font-size:clamp(2rem,4vw,3.5rem); }
+.design-lightbox-info p:not(.section-index) { color:#c4b5a4; line-height:1.7; }
+.design-lightbox-actions { display:flex; align-items:center; flex-wrap:wrap; gap:.6rem; }
+.design-lightbox-actions .button-link { text-decoration:none; }
+@media (max-width: 900px) {
+  .design-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:.7rem; }
+  .design-library { padding:6rem 4vw; }
+}
+@media (max-width: 620px) {
+  .design-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:.65rem; }
+  .design-library-header { gap:1rem; }
+  .design-library-tools { font-size:.58rem; }
+  .design-pagination { flex-wrap:wrap; justify-content:center; }
+  .design-page-numbers { order:-1; width:100%; }
+  .design-page-number { min-width:2.2rem; padding:.6rem; }
+  .design-page-arrow { flex:1; }
+  .design-lightbox { padding:.5rem; }
+  .design-lightbox-panel { grid-template-columns:1fr; max-height:94vh; }
+  .design-lightbox-art { min-height:260px; max-height:48vh; padding:1rem; }
+  .design-lightbox-art img { max-height:44vh; }
+  .design-lightbox-info { padding:1.25rem; gap:1.2rem; }
+  .design-lightbox-actions { display:grid; grid-template-columns:1fr 1fr; }
+  .design-lightbox-actions .button-link { grid-column:1 / -1; }
+}
