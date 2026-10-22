@@ -16,11 +16,11 @@ type Product = {
 };
 
 const products: Product[] = [
-  { id: 'mugs', name: 'The daily vessel', category: 'Custom mugs', price: '₹349', image: '/grab-editorial.jpg', color: '#ab4b2c', note: 'A little ritual, made yours. Add a name, a line, or your own artwork.', mark: '01 / OBJECT' },
-  { id: 'tees', name: 'Heavy rotation tee', category: 'Graphic T-shirts', price: '₹799', image: '/grab-tee.jpg', color: '#5b3026', note: 'Roomy, lived-in cotton with graphics that do the talking.', mark: '02 / WEAR' },
-  { id: 'stickers', name: 'Peel & keep set', category: 'Sticker sheets', price: '₹129', image: '/grab-editorial.jpg', color: '#c76a3a', note: 'Die-cut shapes for laptops, bottles, notebooks, and wherever.', mark: '03 / STICK' },
-  { id: 'caps', name: 'Off-duty cap', category: 'Embroidered caps', price: '₹499', image: '/grab-editorial.jpg', color: '#394039', note: 'A soft-structured cap, finished with a mark of your choosing.', mark: '04 / SHADE' },
-  { id: 'gifts', name: 'Made for someone', category: 'Personalised gifts', price: 'From ₹199', image: '/grab-editorial.jpg', color: '#7a5541', note: 'Small runs and personal touches for people worth keeping close.', mark: '05 / GIVE' },
+  { id: 'graphic-tees', name: 'Graphic T-shirts', category: 'Graphic T-shirts', price: '₹400', image: '/grab-tee.jpg', color: '#5b3026', note: 'Wearable artwork with a little personality. Choose a design and make it yours.', mark: '01 / WEAR' },
+  { id: 'dtf-tees', name: 'Custom DTF T-shirts', category: 'Custom DTF T-shirts', price: '₹400', image: '/grab-tee.jpg', color: '#713d2b', note: 'Pick your artwork and customise your tee with a design that feels like you.', mark: '02 / PRINT' },
+  { id: 'puzzles', name: 'Customisable puzzles', category: 'Customisable puzzles', price: '₹400', image: '/grab-editorial.jpg', color: '#c76a3a', note: 'Turn a favourite picture or idea into a custom puzzle.', mark: '03 / PLAY' },
+  { id: 'mugs', name: 'Custom mugs', category: 'Custom mugs', price: '₹250', image: '/grab-editorial.jpg', color: '#ab4b2c', note: 'A daily ritual, made personal with your own artwork or message.', mark: '04 / SIP' },
+  { id: 'bottles', name: 'Custom bottles', category: 'Custom bottles', price: '₹350', image: '/grab-editorial.jpg', color: '#394039', note: 'A bottle with your name, artwork, or a design worth carrying around.', mark: '05 / CARRY' },
 ];
 
 function Intro({ onFinish }: { onFinish: () => void }) {
@@ -70,6 +70,87 @@ function Intro({ onFinish }: { onFinish: () => void }) {
       <div className="intro-caption">{phase === 'grab' || phase === 'open' ? 'Good things don’t sit still.' : 'A little something is taking shape.'}</div>
       <button className="intro-skip mono" onClick={finish}>Skip intro <ArrowRight size={14} /></button>
     </div>
+  );
+}
+
+
+type DesignItem = { id: string; src: string };
+
+function DesignLibrary() {
+  const [page, setPage] = useState(1);
+  const [activeDesign, setActiveDesign] = useState<DesignItem | null>(null);
+  const designs: DesignItem[] = Array.from({ length: 185 }, (_, index) => {
+    const id = String(index + 1).padStart(3, '0');
+    return { id, src: `/designs/design-${id}.jpg` };
+  });
+  const totalPages = Math.ceil(designs.length / 30);
+  const visibleDesigns = designs.slice((page - 1) * 30, page * 30);
+
+  useEffect(() => {
+    if (!activeDesign) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setActiveDesign(null);
+      if (event.key === 'ArrowRight') setActiveDesign((current) => {
+        if (!current) return current;
+        const next = Math.min(185, Number(current.id) + 1);
+        return { id: String(next).padStart(3, '0'), src: `/designs/design-${String(next).padStart(3, '0')}.jpg` };
+      });
+      if (event.key === 'ArrowLeft') setActiveDesign((current) => {
+        if (!current) return current;
+        const next = Math.max(1, Number(current.id) - 1);
+        return { id: String(next).padStart(3, '0'), src: `/designs/design-${String(next).padStart(3, '0')}.jpg` };
+      });
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [activeDesign]);
+
+  return (
+    <section className="design-library" id="designs">
+      <div className="section-header design-library-header">
+        <div>
+          <p className="section-index mono">03 / The design library</p>
+          <h2>Find your<br /><span className="serif">kind of statement.</span></h2>
+        </div>
+        <p className="section-aside">185 artworks.<br />Pick one that feels like you.</p>
+      </div>
+      <div className="design-library-tools">
+        <span className="mono">DESIGNS {String(visibleDesigns[0]?.id ?? '001')}—{String(visibleDesigns[visibleDesigns.length - 1]?.id ?? '030')}</span>
+        <span className="mono">{designs.length} DESIGNS · {totalPages} PAGES</span>
+      </div>
+      <div className="design-grid">
+        {visibleDesigns.map((design) => (
+          <button className="design-card" key={design.id} onClick={() => setActiveDesign(design)} aria-label={`Open design ${design.id}`}>
+            <span className="design-thumb"><img src={design.src} alt={`T-shirt artwork design ${design.id}`} loading="lazy" /></span>
+            <span className="design-card-meta mono"><span>DESIGN</span><strong>{design.id}</strong><span className="design-open">↗</span></span>
+          </button>
+        ))}
+      </div>
+      <div className="design-pagination" aria-label="Design library pages">
+        <button className="design-page-arrow mono" onClick={() => { setPage((p) => Math.max(1, p - 1)); document.getElementById('designs')?.scrollIntoView({ behavior: 'smooth' }); }} disabled={page === 1}>← Previous</button>
+        <div className="design-page-numbers">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
+            <button key={number} className={`design-page-number mono ${page === number ? 'active' : ''}`} onClick={() => { setPage(number); document.getElementById('designs')?.scrollIntoView({ behavior: 'smooth' }); }} aria-current={page === number ? 'page' : undefined}>{String(number).padStart(2, '0')}</button>
+          ))}
+        </div>
+        <button className="design-page-arrow mono" onClick={() => { setPage((p) => Math.min(totalPages, p + 1)); document.getElementById('designs')?.scrollIntoView({ behavior: 'smooth' }); }} disabled={page === totalPages}>Next →</button>
+      </div>
+      <p className="design-library-foot mono">Choose a design to view it larger. Ask us about printing it on your T-shirt.</p>
+      {activeDesign && <div className="design-lightbox" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setActiveDesign(null); }}>
+        <section className="design-lightbox-panel" role="dialog" aria-modal="true" aria-label={`Design ${activeDesign.id} preview`}>
+          <button className="design-lightbox-close" onClick={() => setActiveDesign(null)} aria-label="Close design preview"><X size={22} /></button>
+          <div className="design-lightbox-art"><img src={activeDesign.src} alt={`Full artwork for design ${activeDesign.id}`} /></div>
+          <div className="design-lightbox-info">
+            <div><p className="section-index mono">THE GRAB CLUB · DESIGN LIBRARY</p><h3>Design <span className="serif">{activeDesign.id}</span></h3><p>Like this artwork? Mention its design number when you enquire about a custom DTF T-shirt.</p></div>
+            <div className="design-lightbox-actions">
+              <button className="design-page-arrow mono" onClick={() => { const next = Math.max(1, Number(activeDesign.id) - 1); setActiveDesign({ id: String(next).padStart(3, '0'), src: `/designs/design-${String(next).padStart(3, '0')}.jpg` }); }} disabled={activeDesign.id === '001'}>← Previous</button>
+              <a className="button-link mono" href="#enquire" onClick={() => setActiveDesign(null)}>Enquire about this design ↗</a>
+              <button className="design-page-arrow mono" onClick={() => { const next = Math.min(185, Number(activeDesign.id) + 1); setActiveDesign({ id: String(next).padStart(3, '0'), src: `/designs/design-${String(next).padStart(3, '0')}.jpg` }); }} disabled={activeDesign.id === '185'}>Next →</button>
+            </div>
+          </div>
+        </section>
+      </div>}
+    </section>
   );
 }
 
@@ -127,6 +208,7 @@ function App() {
         <a className="wordmark" href="#top" aria-label="THE GRAB CLUB home">THE GRAB CLUB</a>
         <nav className="desktop-nav" aria-label="Main navigation">
           {navLink('#objects', 'Objects')}
+          {navLink('#designs', 'Design library')}
           {navLink('#about', 'The idea')}
           {navLink('#enquire', 'Enquire')}
         </nav>
@@ -134,7 +216,7 @@ function App() {
         <button className="mobile-menu-button" aria-label={mobileMenu ? 'Close navigation' : 'Open navigation'} onClick={() => setMobileMenu(!mobileMenu)}>
           {mobileMenu ? <X size={22} /> : <Menu size={22} />}
         </button>
-        {mobileMenu && <nav className="mobile-nav menu-panel" aria-label="Mobile navigation">{navLink('#objects', 'Objects')}{navLink('#about', 'The idea')}{navLink('#enquire', 'Enquire')}</nav>}
+        {mobileMenu && <nav className="mobile-nav menu-panel" aria-label="Mobile navigation">{navLink('#objects', 'Objects')}{navLink('#designs', 'Design library')}{navLink('#about', 'The idea')}{navLink('#enquire', 'Enquire')}</nav>}
       </header>
 
       <section id="top" className="hero">
@@ -183,13 +265,15 @@ function App() {
         <p className="price-note mono">Indicative starting prices · final quote depends on customisation and quantity</p>
       </section>
 
+      <DesignLibrary />
+
       <section className="custom-section">
         <div className="custom-art image-grain">
           <img src="/grab-tee.jpg" alt="A heavyweight graphic tee against a textured orange wall" />
           <span className="custom-art-note mono">A blank is just<br />a beginning.</span>
         </div>
         <div className="custom-copy">
-          <p className="section-index mono">03 / Made yours</p>
+          <p className="section-index mono">04 / Made yours</p>
           <h2>Bring the<br /><span className="serif">inside joke.</span></h2>
           <p className="custom-description">A name. A sketch. A team thing only your group understands. Tell us the story; we’ll help find the right surface for it.</p>
           <a className="button-link mono" href="#enquire">Start with a thought <ArrowUpRight size={16} /></a>
@@ -198,13 +282,13 @@ function App() {
       </section>
 
       <section className="closing-note">
-        <p className="section-index mono">04 / The next bit</p>
+        <p className="section-index mono">05 / The next bit</p>
         <p className="closing-quote">Good taste is personal.<br /><span className="serif">So should your stuff be.</span></p>
         <a href="#enquire" className="round-arrow closing-arrow" aria-label="Go to enquiry form"><ArrowDown size={20} /></a>
       </section>
 
       <section className="enquiry-section" id="enquire">
-        <div className="enquiry-heading"><p className="section-index mono">05 / Start a conversation</p><h2>Got a thing<br />in <span className="serif">mind?</span></h2></div>
+        <div className="enquiry-heading"><p className="section-index mono">06 / Start a conversation</p><h2>Got a thing<br />in <span className="serif">mind?</span></h2></div>
         <div className="enquiry-body"><p>Give us the rough version. What you're making, who it's for, how many you might need. We’ll take it from there.</p><button className="button-link mono" onClick={() => openProduct(products[0])}>Make an enquiry <ArrowUpRight size={16} /></button>
           <div className="contact-note"><span className="mono">CONTACT EMAIL — PLACEHOLDER</span><strong>{CONTACT_EMAIL}</strong><small>Replace with your real contact email before launch. Enquiries open in your email app.</small></div>
         </div>
